@@ -1,40 +1,48 @@
-const selections = ['rock','paper','scissors']
+//declare useful variables
 let playerScore = 0;
 let compScore = 0;
 let tie = 0
-let getComputerChoice = function() {
-  let randomNum = Math.floor(Math.random() * 3)
-  const options = ['rock','paper','scissors']
-  let compChoice = options[randomNum]
-  return (compChoice)
-}
-//  console.log(getComputerChoice())
+let results = document.getElementById('results')
 
-let getPlayerChoice = function(){
-  let playerChoice = prompt("Enter a choice : Options are Rock, Paper, Scissors")
-  playerChoice = playerChoice.toLowerCase()
 
-  if(!(selections.includes(playerChoice))){
-      alert("Enter a valid choice")
-  }
-  else{
-  return(playerChoice)
-  }
+// function that takes in user selections from the buttons, and calls the play function
+let select = function(text){
+  playOnce(text.toLowerCase())
 }
 
-let playOnce = function(playerSelection, computerSelection){
-  playerSelection = getPlayerChoice()
-  computerSelection = getComputerChoice()
+
+//function that selects the buttons, checks which one has been clicked, gets its textContent and calls the select function
+let playerChoice = function(){
+  let choice = document.getElementsByClassName('clicks')
+  let choices = Array.from(choice)
+  let a;
+
+  for (let ch of choices){
+    ch.addEventListener('click',function(){
+      a = ch.innerText
+      select(a)
+    })
+  }
+
+}
+
+// Function that plays a game once. Takes in two parameters. 
+// The second parameter will be given by default from the function that gets the computer choice
+// The first parameter will be passed on function call
+
+let playOnce = function(playerSelection, computerSelection=getComputerChoice()){
   if(playerSelection == computerSelection) {
-    alert("TIE!")
-    tie+=1;
+    tie+=1; 
+    results.innerText=`TIE!\nPlayer Score: ${playerScore} \nComputer Score ${compScore} \n Ties : ${tie}`
+    
   }
   else if(playerSelection=='rock' && computerSelection=='scissors'
   || playerSelection == 'paper' && computerSelection== 'rock'
   || playerSelection == 'scissors' && computerSelection== 'paper'
   ){
-    alert(`Player wins! \n ${playerSelection} beats ${computerSelection}`)
     playerScore += 1;
+    results.innerText=`Player wins! \n ${playerSelection} beats ${computerSelection}. \nPlayer Score: ${playerScore} \nComputer Score ${compScore}\n Ties : ${tie}`
+    
   }
 
   else if (playerSelection=='paper' && computerSelection=='scissors'
@@ -42,21 +50,19 @@ let playOnce = function(playerSelection, computerSelection){
   || playerSelection == 'rock' && computerSelection== 'paper'
   ){
     compScore +=1
-    alert(`Computer wins! \n ${computerSelection} beats ${playerSelection}`)
+    results.innerText=`Computer wins! \n ${computerSelection} beats ${playerSelection}\nPlayer Score: ${playerScore} \nComputer Score ${compScore} \n Ties : ${tie}`
   }
 }
 
-let game = function(){
-for(let i=0;i<5;i++){
-  playOnce()
-}
-alert(`Computer ${compScore} : Player ${playerScore} : tie ${tie}`)
-if (compScore > playerScore) {
-  return ("computer wins")
-}
-else {
-  return("player wins")
-}
+
+
+//generate random computer choices
+let getComputerChoice = function() {
+  let randomNum = Math.floor(Math.random() * 3)
+  const options = ['rock','paper','scissors']
+  let compChoice = options[randomNum]
+  return (compChoice)
 }
 
-console.log(game())
+
+playerChoice()
